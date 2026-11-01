@@ -4,9 +4,9 @@
 
 `setup-fresh-rdp.ps1` installs the latest stable Python 3 release through the official Python install manager, plus Node.js LTS (including npm) and Git through WinGet. Run it once on a fresh Windows RDP machine; you can rerun it later to pick up package updates. Python is installed for the account running the script.
 
-1. Open **PowerShell as Administrator** on the RDP machine.
-2. From this folder, run `powershell -ExecutionPolicy Bypass -File .\setup-fresh-rdp.ps1`.
-3. Open a new PowerShell window and check `python --version`, `node --version`, `npm --version`, and `git --version`.
+1. Download and extract this repository on the RDP machine.
+2. Double-click `setup-fresh-rdp.bat` and approve the administrator prompt. Keep the `.bat` and `.ps1` files together.
+3. When setup finishes, open a new PowerShell window and check `python --version`, `node --version`, `npm --version`, and `git --version`.
 
 The script requires WinGet, MSIX/App Installer support, and internet access. On a newly created Windows account, it tries to register WinGet first. If WinGet is unavailable (for example, on some older Windows Server versions), install Microsoft App Installer or use a supported Windows version before rerunning. It does not change the account lockout policy.
 
