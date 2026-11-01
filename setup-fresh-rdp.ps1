@@ -1,7 +1,7 @@
 # Run once on a fresh Windows RDP machine from an elevated PowerShell window.
 $ErrorActionPreference = 'Stop'
 
-Write-Host 'Fresh RDP setup: installing Python, Node.js LTS, and Git.'
+Write-Host 'Fresh RDP setup: installing Python, Node.js LTS, Git, Claude Code CLI, and Codex CLI.'
 Write-Host 'Run this again later to check for available package updates.'
 
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -38,6 +38,7 @@ if ($LASTEXITCODE -ne 0) {
 $packages = @(
     @{ Name = 'Node.js LTS'; Id = 'OpenJS.NodeJS.LTS' }
     @{ Name = 'Git'; Id = 'Git.Git' }
+    @{ Name = 'Claude Code CLI'; Id = 'Anthropic.ClaudeCode' }
 )
 
 $failed = @()
@@ -54,5 +55,26 @@ if ($failed.Count -gt 0) {
     throw "Setup incomplete. Check the WinGet output above, then rerun this script. Failed: $($failed -join ', ')"
 }
 
+# WinGet may have updated PATH after this PowerShell process started.
+$env:Path = @(
+    [Environment]::GetEnvironmentVariable('Path', 'Machine')
+    [Environment]::GetEnvironmentVariable('Path', 'User')
+) -join ';'
+$npmCommand = Get-Command npm.cmd -ErrorAction SilentlyContinue
+$npmPath = if ($npmCommand) { $npmCommand.Source } else { $null }
+if (-not $npmPath) {
+    $npmPath = Join-Path $env:ProgramFiles 'nodejs\npm.cmd'
+}
+if (-not (Test-Path $npmPath)) {
+    throw 'Node.js was installed, but npm.cmd was not found. Open a new PowerShell window and rerun this script.'
+}
+
+Write-Host 'Installing or updating Codex CLI...'
+& $npmPath install -g '@openai/codex@latest'
+if ($LASTEXITCODE -ne 0) {
+    throw "Codex CLI installation failed (npm exit code $LASTEXITCODE)."
+}
+
 Write-Host 'Setup finished. Open a NEW PowerShell window so PATH updates are loaded.'
-Write-Host 'Then verify with: python --version; node --version; npm --version; git --version'
+Write-Host 'Then verify with: python --version; node --version; npm --version; git --version; claude --version; codex --version'
+Write-Host 'Run claude and codex separately to sign in to your accounts.'

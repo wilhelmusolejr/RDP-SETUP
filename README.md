@@ -2,11 +2,12 @@
 
 ## Fresh RDP developer setup
 
-`setup-fresh-rdp.ps1` installs the latest stable Python 3 release through the official Python install manager, plus Node.js LTS (including npm) and Git through WinGet. Run it once on a fresh Windows RDP machine; you can rerun it later to pick up package updates. Python is installed for the account running the script.
+`setup-fresh-rdp.ps1` installs five tools: the latest stable Python 3 release through the official Python install manager; Node.js LTS (including npm), Git, and Claude Code CLI through WinGet; and Codex CLI through npm. Run it once on a fresh Windows RDP machine; you can rerun it later to pick up package updates. Python and the Codex npm package are installed for the account running the script.
 
 1. Download and extract this repository on the RDP machine.
 2. Double-click `setup-fresh-rdp.bat` and approve the administrator prompt. Keep the `.bat` and `.ps1` files together.
-3. When setup finishes, open a new PowerShell window and check `python --version`, `node --version`, `npm --version`, and `git --version`.
+3. When setup finishes, open a new PowerShell window and check `python --version`, `node --version`, `npm --version`, `git --version`, `claude --version`, and `codex --version`.
+4. Run `claude` and `codex` separately to sign in to each service. The installer does not sign in for you.
 
 The script requires WinGet, MSIX/App Installer support, and internet access. On a newly created Windows account, it tries to register WinGet first. If WinGet is unavailable (for example, on some older Windows Server versions), install Microsoft App Installer or use a supported Windows version before rerunning. It does not change the account lockout policy.
 
